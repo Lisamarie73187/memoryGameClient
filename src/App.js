@@ -5,7 +5,9 @@ import Game from './components/Game'
 
 function App() {
     const [userName, setUserName] = useState('');
-    const options = 26
+    const [highScore, setHighScore] = useState(0)
+
+    const options = 26;
 
 
 
@@ -20,6 +22,8 @@ function App() {
         ) : (
             <Game
                 options={options}
+                highScore={highScore}
+                setHighScore={setHighScore}
             />
         )
         }

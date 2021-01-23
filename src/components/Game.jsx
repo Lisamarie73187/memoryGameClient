@@ -1,7 +1,7 @@
 import React,{useState, useEffect} from 'react'
 import Card from './Card'
 
-function Game(props) {
+function Game({options, highScore, setHighScore}) {
     const [game, setGame] = useState([]);
     const [flippedCount, setFlippedCount] = useState(0);
     const [flippedIndexes, setFlippedIndexes] = useState([]);
@@ -23,7 +23,7 @@ function Game(props) {
 
     useEffect(() => {
         const newGame = [];
-        for (let i = 0; i < props.options / 2; i++) {
+        for (let i = 0; i < options / 2; i++) {
             const firstOption = {
                 id: 2 * i,
                 colorId: i,
@@ -45,15 +45,27 @@ function Game(props) {
         setGame(shuffledGame)
     }, []);
 
-    useEffect(() => {
-        // Loads when the game variable changes
-    }, [game]);
 
     if (flippedIndexes.length === 2) {
-        // Runs if two cards have been flipped
+        const match = game[flippedIndexes[0]].colorId === game[flippedIndexes[1]].colorId;
+
+        if (match) {
+            const newGame = [...game];
+            newGame[flippedIndexes[0]].flipped = true;
+            newGame[flippedIndexes[1]].flipped = true;
+            setGame(newGame);
+
+            const newIndexes = [...flippedIndexes];
+            newIndexes.push(false);
+            setFlippedIndexes(newIndexes)
+        } else {
+            const newIndexes = [...flippedIndexes];
+            newIndexes.push(true);
+            setFlippedIndexes(newIndexes)
+        }
     }
 
-    if (game.length === 0) return <div>loading...</div>
+    if (game.length === 0) return <div>loading...</div>;
     else {
         return (
             <div id="cards">
