@@ -1,38 +1,79 @@
+/*globals*/
+
 .App {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.textOne {
+  font-size: 25px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.signIn {
+  padding-top: 100px
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+input {
+  height: 30px;
+  width: 25vw;
+  border:none;
+  border-bottom: 1px solid lightgray;
+  padding: 5px;
+  margin-top: 50px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.button {
+  background-color: #13ceff;
+  padding: 12px;
+  border-radius: 10px;
   color: white;
+  cursor: pointer;
+  margin: 50px 40vw 50px 40vw;
 }
 
-.App-link {
-  color: #61dafb;
+.button:hover {
+  background: #008378;
+}
+.button:focus {
+  outline: 0;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#cards {
+  width: 1060px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
 }
+.card {
+  width: 160px;
+  height: 160px;
+  margin-bottom: 20px;
+}
+.card:not(:nth-child(6n)) {
+  margin-right: 20px;
+}
+
+.c {
+  position: absolute;
+  max-width: 160px;
+  max-height: 160px;
+  width: 50ch;
+  height: 50ch;
+  cursor: pointer;
+  will-change: transform, opacity;
+}
+
+.front,
+.back {
+  background-size: cover;
+}
+
+.back {
+  background-image: url(https://images.unsplash.com/photo-1544511916-0148ccdeb877?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1901&q=80i&auto=format&fit=crop);
+}
+
+.front {
+  background-image: url(https://images.unsplash.com/photo-1540206395-68808572332f?ixlib=rb-1.2.1&w=1181&q=80&auto=format&fit=crop);
+}
+
