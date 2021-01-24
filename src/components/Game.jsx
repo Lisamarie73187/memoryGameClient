@@ -1,7 +1,10 @@
 import React,{useState, useEffect} from 'react'
 import Card from './Card'
 
-function Game({options, highScore, setHighScore}) {
+
+
+
+function Game({options, userName}) {
     const [game, setGame] = useState([]);
     const [flippedCount, setFlippedCount] = useState(0);
     const [flippedIndexes, setFlippedIndexes] = useState([]);

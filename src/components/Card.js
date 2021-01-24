@@ -25,10 +25,10 @@ function Card({id, color, game, flippedCount, setFlippedCount, flippedIndexes, s
 
     const onCardClick = () => {
         if (!game[id].flipped && flippedCount % 3 === 0) {
-            set(state => !state)
-            setFlippedCount(flippedCount + 1)
-            const newIndexes = [...flippedIndexes]
-            newIndexes.push(id)
+            set(state => !state);
+            setFlippedCount(flippedCount + 1);
+            const newIndexes = [...flippedIndexes];
+            newIndexes.push(id);
             setFlippedIndexes(newIndexes)
         } else if (
             flippedCount % 3 === 1 &&
