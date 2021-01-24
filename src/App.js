@@ -3,12 +3,19 @@ import './App.css';
 import SignIn from "./components/SignIn";
 import Game from './components/Game';
 import io from "socket.io-client/build/index";
+import Lobby from "./components/Lobby";
+
+const screenStrings = {
+    lobby: 'lobby',
+    signIn: 'signIn',
+    game: 'game'
+}
 
 
 function App() {
-    const [userName, setUserName] = useState('');
     const [userList, setUserList] = useState([]);
     const [everyoneReady, setEveryoneReady] = useState(false);
+    const [screen, setScreen] = useState(screenStrings.signIn)
     const socket = useRef(null);
 
     const options = 26;
@@ -27,14 +34,14 @@ function App() {
 
     useEffect(() => {
         if(userList.length > 0){
-            const test = userList.every(e => e.ready === true)
-            setEveryoneReady(test)
+            const isEveryoneReady = userList.every(e => e.ready === true);
+            setEveryoneReady(isEveryoneReady)
         }
     },[userList]);
 
 
     const join = (name) => {
-        setUserName(name);
+        setScreen(screenStrings.lobby);
         socket.current.emit('join', name)
     };
 
@@ -42,34 +49,30 @@ function App() {
         socket.current.emit('ready', true)
     };
 
-    console.log(everyoneReady)
+    const goToGame = () => {
+        setScreen(screenStrings.game)
+    }
+
 
   return (
     <div className="App">
-        <h1>Memory Game</h1>
-        {!userName && (
-            <SignIn getUserName={join} />
-        )}
-        {userName &&
-
-        <div>
-            {userList.map((e,i) => {
-                return (
-                    <div>
-                        {e.name}
-                        <div onClick={playerIsReady}>{!!e.ready ? 'ready' : 'ready?'}</div>
-                    </div>
-                )
-            })}
-        </div>
+        <div className="title">Memory Game</div>
+        {screen === screenStrings.signIn &&
+            <SignIn join={join} />
         }
-        {everyoneReady &&
-        <div>Lets Play</div>
+        {screen === screenStrings.lobby &&
+            <Lobby
+                userList={userList}
+                playerIsReady={playerIsReady}
+                everyoneIsReady={everyoneReady}
+                goToGame={goToGame}
+            />
         }
-        {/*<Game*/}
-            {/*options={options}*/}
-            {/*userName={userName}*/}
-        {/*/>*/}
+        {screen === screenStrings.game &&
+            <Game
+                options={options}
+            />
+        }
     </div>
   );
 }

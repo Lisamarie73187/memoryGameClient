@@ -4,7 +4,7 @@ import Card from './Card'
 
 
 
-function Game({options, userName}) {
+function Game({options}) {
     const [game, setGame] = useState([]);
     const [flippedCount, setFlippedCount] = useState(0);
     const [flippedIndexes, setFlippedIndexes] = useState([]);

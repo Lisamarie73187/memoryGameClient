@@ -1,14 +1,12 @@
-import React,{useState, useRef} from 'react'
-import io from "socket.io-client/build/index";
+import React,{useState} from 'react'
 
 
-
-function SignIn(props) {
+function SignIn({join}) {
     const [userName, setUserName] = useState('');
 
 
     const submitUserName = () => {
-        props.getUserName(userName)
+        join(userName)
     };
 
     return (
@@ -21,7 +19,7 @@ function SignIn(props) {
                     onChange={(event) => setUserName(event.target.value)}
                 />
                <div className="button" onClick={submitUserName}>
-                    I'm Ready
+                   Join
                </div>
         </div>
     );
