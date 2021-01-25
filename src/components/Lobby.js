@@ -1,9 +1,19 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import checkMark from '../assets/checkmark.png'
 
 
 
 function Lobby({userList, playerIsReady, everyoneIsReady, goToGame}) {
+    const [showPlayButton, setShowPlayButton]= useState(false)
+
+    useEffect(() => {
+        if(userList.length > 0){
+            const everyoneIsReady = userList.every(e => {
+                return e.ready
+            });
+            setShowPlayButton(everyoneIsReady)
+        }
+    },[userList]);
 
     return (
         <>
@@ -17,13 +27,14 @@ function Lobby({userList, playerIsReady, everyoneIsReady, goToGame}) {
                                     {!!e.ready ? <img src={checkMark} alt="checkmark" height={30} width={30}/>  : <div className="ready">ready?</div>}
                                 </div>
                             </div>
+
                         </div>
                     )
                 })}
-            </div>
-            {everyoneIsReady &&
+                {showPlayButton &&
                 <div className="button" onClick={goToGame}>Lets Play</div>
-            }
+                }
+            </div>
         </>
     );
 }

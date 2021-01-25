@@ -14,8 +14,7 @@ const screenStrings = {
 
 function App() {
     const [userList, setUserList] = useState([]);
-    const [everyoneReady, setEveryoneReady] = useState(false);
-    const [screen, setScreen] = useState(screenStrings.signIn)
+    const [screen, setScreen] = useState(screenStrings.signIn);
     const socket = useRef(null);
 
     const options = 26;
@@ -29,15 +28,9 @@ function App() {
         });
         socket.current.on('users', (users) => {
             setUserList(users)
-        })
-    },[]);
+        });
 
-    useEffect(() => {
-        if(userList.length > 0){
-            const isEveryoneReady = userList.every(e => e.ready === true);
-            setEveryoneReady(isEveryoneReady)
-        }
-    },[userList]);
+    },[]);
 
 
     const join = (name) => {
@@ -51,7 +44,7 @@ function App() {
 
     const goToGame = () => {
         setScreen(screenStrings.game)
-    }
+    };
 
 
   return (
@@ -64,13 +57,13 @@ function App() {
             <Lobby
                 userList={userList}
                 playerIsReady={playerIsReady}
-                everyoneIsReady={everyoneReady}
                 goToGame={goToGame}
             />
         }
         {screen === screenStrings.game &&
             <Game
                 options={options}
+                socket={socket}
             />
         }
     </div>
