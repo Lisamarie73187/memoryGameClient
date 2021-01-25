@@ -2,8 +2,6 @@ import React,{useState, useEffect} from 'react'
 import Card from './Card'
 
 
-
-
 function Game({options, socket}) {
     const [game, setGame] = useState([]);
     const [flippedCount, setFlippedCount] = useState(0);
@@ -17,7 +15,6 @@ function Game({options, socket}) {
         })
     }, []);
 
-
     if (flippedIndexes.length === 2) {
         const match = game[flippedIndexes[0]].colorId === game[flippedIndexes[1]].colorId;
 
@@ -26,7 +23,6 @@ function Game({options, socket}) {
             newGame[flippedIndexes[0]].flipped = true;
             newGame[flippedIndexes[1]].flipped = true;
             setGame(newGame);
-
             const newIndexes = [...flippedIndexes];
             newIndexes.push(false);
             setFlippedIndexes(newIndexes)
@@ -51,6 +47,7 @@ function Game({options, socket}) {
                             setFlippedCount={setFlippedCount}
                             flippedIndexes={flippedIndexes}
                             setFlippedIndexes={setFlippedIndexes}
+                            socket={socket}
                         />
                     </div>
                 ))}

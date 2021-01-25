@@ -2,18 +2,18 @@ import React,{useState, useEffect} from 'react'
 import { useSpring, animated as a } from 'react-spring'
 
 
-function Card({id, color, game, flippedCount, setFlippedCount, flippedIndexes, setFlippedIndexes}) {
-    const [flipped, set] = useState(false);
+function Card({id, color, game, flippedCount, setFlippedCount, flippedIndexes, setFlippedIndexes, socket}) {
+    const [flipped, setFlippedCard] = useState(false);
     const {transform, opacity} = useSpring({
         opacity: flipped ? 1 : 0,
         transform: `perspective(600px) rotateX(${flipped ? 180 : 0}deg)`,
         config: {mass: 5, tension: 500, friction: 80},
-    })
+    });
 
     useEffect(() => {
         if (flippedIndexes[2] === true && flippedIndexes.indexOf(id) > -1) {
             setTimeout(() => {
-                set(state => !state)
+                setFlippedCard(state => !state)
                 setFlippedCount(flippedCount + 1);
                 setFlippedIndexes([])
             }, 1000)
@@ -23,24 +23,36 @@ function Card({id, color, game, flippedCount, setFlippedCount, flippedIndexes, s
         }
     }, [flippedIndexes]);
 
+    useEffect(() => {
+
+        socket.current.on('cardFlipped', (data) => {
+            if(data.id === id){
+                if (!game[id].flipped && flippedCount % 3 === 0) {
+                    setFlippedCard(!flipped);
+                    setFlippedCount(flippedCount + 1);
+                    const newIndexes = [...data.flippedIndexes];
+                    newIndexes.push(id);
+                    setFlippedIndexes(newIndexes)
+
+                } else if (
+                    flippedCount % 3 === 1 &&
+                    !game[id].flipped &&
+                    flippedIndexes.indexOf(id) < 0
+                ) {
+                    setFlippedCard(state => !state);
+                    setFlippedCount(flippedCount + 1);
+                    const newIndexes = [...data.flippedIndexes];
+                    newIndexes.push(id);
+                    setFlippedIndexes(newIndexes)
+                }
+            }
+
+        })
+
+    }, []);
+
     const onCardClick = () => {
-        if (!game[id].flipped && flippedCount % 3 === 0) {
-            set(state => !state);
-            setFlippedCount(flippedCount + 1);
-            const newIndexes = [...flippedIndexes];
-            newIndexes.push(id);
-            setFlippedIndexes(newIndexes)
-        } else if (
-            flippedCount % 3 === 1 &&
-            !game[id].flipped &&
-            flippedIndexes.indexOf(id) < 0
-        ) {
-            set(state => !state);
-            setFlippedCount(flippedCount + 1);
-            const newIndexes = [...flippedIndexes];
-            newIndexes.push(id);
-            setFlippedIndexes(newIndexes)
-        }
+        socket.current.emit('cardFlipped', {id, flippedIndexes});
     };
 
     return (
