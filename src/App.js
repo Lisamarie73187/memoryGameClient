@@ -64,6 +64,7 @@ function App() {
             <Game
                 options={options}
                 socket={socket}
+                userList={userList}
             />
         }
     </div>

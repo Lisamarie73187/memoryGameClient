@@ -2,7 +2,7 @@
 .App {
   text-align: center;
   height: 500vh;
-  width: 100vw;
+  margin: 0 auto;
   background-color: #f2edf4;
 }
 
@@ -34,7 +34,7 @@ input {
 
 .playerNameWrapper {
   background-color: #f6f6f6;
-  margin: 10px 40vw;
+  margin: 10px 20vw;
 }
 
 .playerName {
@@ -79,15 +79,33 @@ input {
   outline: 0;
 }
 
+.usersWrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.user {
+  padding: 0px 20px 30px 0px;
+  font-size: 25px;
+}
+
+.userTurn {
+  padding: 0px 20px 30px 0px;
+  font-weight: bold;
+  font-size: 25px;
+}
+
 #cards {
-  width: 1060px;
+  width: 768px;
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
 .card {
-  width: 160px;
-  height: 160px;
+  width: 100px;
+  height: 100px;
   margin-bottom: 20px;
 }
 .card:not(:nth-child(6n)) {
@@ -96,8 +114,8 @@ input {
 
 .c {
   position: absolute;
-  max-width: 160px;
-  max-height: 160px;
+  max-width: 100px;
+  max-height: 100px;
   width: 50ch;
   height: 50ch;
   cursor: pointer;
@@ -110,10 +128,63 @@ input {
 }
 
 .back {
-  background-image: url(https://images.unsplash.com/photo-1544511916-0148ccdeb877?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1901&q=80i&auto=format&fit=crop);
+  background-image: url(https://images.unsplash.com/photo-1550591541-a7af89544766?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1650&q=80);
 }
 
 .front {
   background-image: url(https://images.unsplash.com/photo-1540206395-68808572332f?ixlib=rb-1.2.1&w=1181&q=80&auto=format&fit=crop);
+}
+
+
+.modalOverlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.modal {
+  width: 350px;
+  height: 200px;
+  margin: 150px auto;
+  background: white;
+  border: 1px solid #ccc;
+  transition: 1.1s ease-out;
+  transform: scale(1);
+  opacity: 1;
+  visibility: visible;
+  -webkit-box-shadow: 1px 11px 19px 2px rgba(0,0,0,0.5);
+  box-shadow: 1px 11px 19px 2px rgba(0,0,0,0.8);
+}
+
+.topBorder {
+  background-color: #a3a4ff;
+  height: 20px;
+  margin-bottom: 10px
+}
+
+.modalText {
+  font-size: 25px;
+}
+
+.modalName {
+  font-size: 40px;
+  color: #a29df5;
+}
+
+.buttonModal {
+  background-color: #13ceff;
+  margin: 20px;
+  padding: 8px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.buttonModal:hover {
+  background: #008378;
+}
+.buttonModal:focus {
+  outline: 0;
 }
 

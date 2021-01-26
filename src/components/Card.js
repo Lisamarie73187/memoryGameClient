@@ -2,7 +2,7 @@ import React,{useState, useEffect} from 'react'
 import { useSpring, animated as a } from 'react-spring'
 
 
-function Card({id, color, game, flippedCount, setFlippedCount, flippedIndexes, setFlippedIndexes, socket}) {
+function Card({id, picture, game, flippedCount, setFlippedCount, flippedIndexes, setFlippedIndexes, socket}) {
     const [flipped, setFlippedCard] = useState(false);
     const {transform, opacity} = useSpring({
         opacity: flipped ? 1 : 0,
@@ -13,7 +13,7 @@ function Card({id, color, game, flippedCount, setFlippedCount, flippedIndexes, s
     useEffect(() => {
         if (flippedIndexes[2] === true && flippedIndexes.indexOf(id) > -1) {
             setTimeout(() => {
-                setFlippedCard(state => !state)
+                setFlippedCard(state => !state);
                 setFlippedCount(flippedCount + 1);
                 setFlippedIndexes([])
             }, 1000)
@@ -22,6 +22,9 @@ function Card({id, color, game, flippedCount, setFlippedCount, flippedIndexes, s
             setFlippedIndexes([])
         }
     }, [flippedIndexes]);
+
+
+
 
     useEffect(() => {
 
@@ -69,7 +72,7 @@ function Card({id, color, game, flippedCount, setFlippedCount, flippedIndexes, s
                 style={{
                     opacity,
                     transform: transform.interpolate(t => `${t} rotateX(180deg)`),
-                    background: color,
+                    backgroundImage: `url(${picture})`,
                 }}
             />
         </div>
