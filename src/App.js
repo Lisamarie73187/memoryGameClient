@@ -50,7 +50,7 @@ function App() {
 
   return (
     <div className="App">
-        <div className="title">Memory Game hello {userName}</div>
+        <div className="title">Memory Game {userName}</div>
         {screen === screenStrings.signIn &&
             <SignIn join={join} />
         }

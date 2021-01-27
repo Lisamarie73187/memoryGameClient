@@ -3,16 +3,13 @@ import Card from './Card'
 import WhoseTurnModal from './WhoseTurnModal'
 
 let indexes = 1;
-let points = 0
 
 function Game({options, socket, userList}) {
     const [game, setGame] = useState([]);
     const [flippedCount, setFlippedCount] = useState(0);
     const [flippedIndexes, setFlippedIndexes] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    const [showMatchModal, setShowMatchModal] = useState(false);
     const [itsAMatch, setItsAMatch] = useState(false);
-    const [playerIndex, setPlayerIndex] = useState(0)
 
     const user = useMemo(() => {
         const turnArr = userList.filter(e => e.turn === true)
@@ -30,15 +27,19 @@ function Game({options, socket, userList}) {
     }, []);
 
     useEffect(() => {
-        if(flippedCount === 2 && userList.length > 1 && !itsAMatch) {
-            let indexOfUser = indexes++;
-            if(indexOfUser >= userList.length - 1){
-                indexes = 0
+        if(flippedCount === 2 && userList.length > 1 ) {
+            if(!itsAMatch) {
+                let indexOfUser = indexes++;
+                if(indexOfUser >= userList.length - 1){
+                    indexes = 0
+                }
+                socket.emit('nextPlayer', indexOfUser);
+                setShowModal(true);
+            } else {
+                setShowModal(true);
             }
-            socket.emit('nextPlayer', indexOfUser);
-            setShowModal(true)
         }
-    },[flippedCount, itsAMatch]);
+    },[flippedCount]);
 
 
 
@@ -55,7 +56,6 @@ function Game({options, socket, userList}) {
             const newIndexes = [...flippedIndexes];
             newIndexes.push(false);
             setFlippedIndexes(newIndexes);
-            console.log(game)
             setItsAMatch(true)
 
         } else {
@@ -64,6 +64,11 @@ function Game({options, socket, userList}) {
             setFlippedIndexes(newIndexes)
         }
     }
+
+    const closeModal = () => {
+        setShowModal(false);
+        setItsAMatch(false);
+    };
 
 
     if (game.length === 0) return <div>loading...</div>;
@@ -102,26 +107,26 @@ function Game({options, socket, userList}) {
                     ))}
                 </div>
                 {showModal &&
-                <WhoseTurnModal userList={userList} setShowModal={setShowModal} color={user.color}>
+                <WhoseTurnModal userList={userList} closeModal={closeModal} color={user.color}>
                     <div className="modalText">
-                        It's
-                        <div style={{
-                            fontSize: '40px',
-                            color: `${user.color}`
-                        }}>
-                            {user.name}
-                        </div>
-                        Turn
-                    </div>
-                </WhoseTurnModal>
-                }
-                {showMatchModal &&
-                <WhoseTurnModal userList={userList} setShowModal={setShowMatchModal} >
-                    <div className="modalText">
-                        It's a Match Congrats
-                        {/*<div className="modalName">*/}
-                            {/*{name}*/}
-                        {/*</div>*/}
+                        {!itsAMatch ? (
+                            <>
+                                It's
+                                <div style={{
+                                    fontSize: '50px',
+                                    color: `${user.color}`,
+                                    borderRadius: '10px'
+                                }}>
+                                    {user.name}
+                                </div>
+                                Turn
+                            </>
+                        ) : (
+                            <>
+                               It's a Match!
+                                Go Again!
+                            </>
+                        )}
                     </div>
                 </WhoseTurnModal>
                 }

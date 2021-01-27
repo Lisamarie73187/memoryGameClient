@@ -16,10 +16,12 @@ function Card({id, picture, game, user, flippedCount, setFlippedCount, flippedIn
                 setFlippedCard(state => !state);
                 setFlippedCount(flippedCount + 1);
                 setFlippedIndexes([])
-            }, 5000)
+            }, 3000)
         } else if (flippedIndexes[2] === false && id === 0) {
-            setFlippedCount(flippedCount + 1);
-            setFlippedIndexes([])
+            setTimeout(() => {
+                setFlippedCount(flippedCount + 1);
+                setFlippedIndexes([])
+            }, 3000)
         }
     }, [flippedIndexes]);
 
@@ -72,7 +74,7 @@ function Card({id, picture, game, user, flippedCount, setFlippedCount, flippedIn
                     opacity,
                     transform: transform.interpolate(t => `${t} rotateX(180deg)`),
                     backgroundImage: `url(${picture})`,
-                    boxShadow: `0px 1px 4px 3px ${user.color}`
+                    boxShadow: `0px 1px 4px 5px ${user.color}`
                 }}
             />
         </div>

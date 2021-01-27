@@ -158,6 +158,7 @@ input {
   opacity: 1;
   visibility: visible;
   box-shadow: 1px 11px 19px 2px rgba(0,0,0,0.8);
+  border-radius: 10px;
 }
 
 
@@ -168,20 +169,5 @@ input {
 .modalName {
   font-size: 40px;
   color: #a29df5;
-}
-
-.buttonModal {
-  background-color: #13ceff;
-  margin: 20px;
-  padding: 8px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.buttonModal:hover {
-  background: #008378;
-}
-.buttonModal:focus {
-  outline: 0;
 }
 

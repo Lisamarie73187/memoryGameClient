@@ -2,11 +2,11 @@ import React,{useEffect} from 'react'
 
 
 
-function WhoseTurnModal({setShowModal, children, color}) {
+function WhoseTurnModal({closeModal, children, color}) {
 
     useEffect(() => {
         setTimeout(() => {
-            setShowModal(false)
+            closeModal(false)
         }, 3000)
     }, []);
 
