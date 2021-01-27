@@ -9,37 +9,38 @@ const screenStrings = {
     lobby: 'lobby',
     signIn: 'signIn',
     game: 'game'
-}
+};
+
+const socket = io.connect("http://192.168.0.7:8180", {
+    withCredentials: true,
+    extraHeaders: {
+        "my-custom-header": "abcd"
+    }
+});
 
 
 function App() {
     const [userList, setUserList] = useState([]);
     const [screen, setScreen] = useState(screenStrings.signIn);
-    const socket = useRef(null);
+    const [userName, setUserName] = useState('')
 
     const options = 26;
 
     useEffect(() => {
-        socket.current = io.connect("http://localhost:8080", {
-            withCredentials: true,
-            extraHeaders: {
-                "my-custom-header": "abcd"
-            }
+        socket.on('users', (connectedUsers) => {
+            setUserList(connectedUsers)
         });
-        socket.current.on('users', (users) => {
-            setUserList(users)
-        });
-
     },[]);
 
 
     const join = (name) => {
         setScreen(screenStrings.lobby);
-        socket.current.emit('join', name)
+        setUserName(name);
+        socket.emit('join', name)
     };
 
     const playerIsReady = () => {
-        socket.current.emit('ready', true)
+        socket.emit('ready', userName)
     };
 
     const goToGame = () => {
@@ -49,7 +50,7 @@ function App() {
 
   return (
     <div className="App">
-        <div className="title">Memory Game</div>
+        <div className="title">Memory Game hello {userName}</div>
         {screen === screenStrings.signIn &&
             <SignIn join={join} />
         }
@@ -58,6 +59,7 @@ function App() {
                 userList={userList}
                 playerIsReady={playerIsReady}
                 goToGame={goToGame}
+                userName={userName}
             />
         }
         {screen === screenStrings.game &&

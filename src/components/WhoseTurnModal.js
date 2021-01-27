@@ -1,25 +1,26 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 
 
 
-function WhoseTurnModal({userList, setShowModal}) {
+function WhoseTurnModal({setShowModal, children, color}) {
 
-    const name = userList.filter(e => e.turn === true)[0].name;
+    useEffect(() => {
+        setTimeout(() => {
+            setShowModal(false)
+        }, 3000)
+    }, []);
 
     return (
         <div className="modalOverlay">
             <div className="modal">
-                <div className="topBorder"/>
-                <div className="modalText">
-                    It's
-                    <div className="modalName">
-                        {name}
-                    </div>
-                    Turn
-                </div>
-                <div className="buttonModal" onClick={setShowModal}>
-                    Close
-                </div>
+                <div style={
+                    {
+                        backgroundColor: `${color}`,
+                        height: '20px',
+                        marginBottom: '10px'
+                    }
+                }/>
+                {children}
             </div>
 
         </div>

@@ -2,7 +2,7 @@ import React,{useState, useEffect} from 'react'
 import { useSpring, animated as a } from 'react-spring'
 
 
-function Card({id, picture, game, flippedCount, setFlippedCount, flippedIndexes, setFlippedIndexes, socket}) {
+function Card({id, picture, game, user, flippedCount, setFlippedCount, flippedIndexes, setFlippedIndexes, socket}) {
     const [flipped, setFlippedCard] = useState(false);
     const {transform, opacity} = useSpring({
         opacity: flipped ? 1 : 0,
@@ -16,7 +16,7 @@ function Card({id, picture, game, flippedCount, setFlippedCount, flippedIndexes,
                 setFlippedCard(state => !state);
                 setFlippedCount(flippedCount + 1);
                 setFlippedIndexes([])
-            }, 1000)
+            }, 5000)
         } else if (flippedIndexes[2] === false && id === 0) {
             setFlippedCount(flippedCount + 1);
             setFlippedIndexes([])
@@ -25,10 +25,9 @@ function Card({id, picture, game, flippedCount, setFlippedCount, flippedIndexes,
 
 
 
-
     useEffect(() => {
 
-        socket.current.on('cardFlipped', (data) => {
+        socket.on('cardFlipped', (data) => {
             if(data.id === id){
                 if (!game[id].flipped && flippedCount % 3 === 0) {
                     setFlippedCard(!flipped);
@@ -36,7 +35,6 @@ function Card({id, picture, game, flippedCount, setFlippedCount, flippedIndexes,
                     const newIndexes = [...data.flippedIndexes];
                     newIndexes.push(id);
                     setFlippedIndexes(newIndexes)
-
                 } else if (
                     flippedCount % 3 === 1 &&
                     !game[id].flipped &&
@@ -55,8 +53,9 @@ function Card({id, picture, game, flippedCount, setFlippedCount, flippedIndexes,
     }, []);
 
     const onCardClick = () => {
-        socket.current.emit('cardFlipped', {id, flippedIndexes});
+        socket.emit('cardFlipped', {id, flippedIndexes});
     };
+
 
     return (
         <div onClick={onCardClick}>
@@ -73,6 +72,7 @@ function Card({id, picture, game, flippedCount, setFlippedCount, flippedIndexes,
                     opacity,
                     transform: transform.interpolate(t => `${t} rotateX(180deg)`),
                     backgroundImage: `url(${picture})`,
+                    boxShadow: `0px 1px 4px 3px ${user.color}`
                 }}
             />
         </div>

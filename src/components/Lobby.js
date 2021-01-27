@@ -3,15 +3,16 @@ import checkMark from '../assets/checkmark.png'
 
 
 
-function Lobby({userList, playerIsReady, everyoneIsReady, goToGame}) {
-    const [showPlayButton, setShowPlayButton]= useState(false)
+function Lobby({userList, userName, playerIsReady, everyoneIsReady, goToGame}) {
 
     useEffect(() => {
         if(userList.length > 0){
             const everyoneIsReady = userList.every(e => {
                 return e.ready
             });
-            setShowPlayButton(everyoneIsReady)
+            if(everyoneIsReady){
+                goToGame()
+            }
         }
     },[userList]);
 
@@ -22,18 +23,15 @@ function Lobby({userList, playerIsReady, everyoneIsReady, goToGame}) {
                     return (
                         <div className="playerNameWrapper">
                             <div className="playerName">
+                                {console.log(e[userName])}
                                 <div>{e.name}</div>
                                 <div onClick={playerIsReady}>
                                     {!!e.ready ? <img src={checkMark} alt="checkmark" height={30} width={30}/>  : <div className="ready">ready?</div>}
                                 </div>
                             </div>
-
                         </div>
                     )
                 })}
-                {showPlayButton &&
-                <div className="button" onClick={goToGame}>Lets Play</div>
-                }
             </div>
         </>
     );
