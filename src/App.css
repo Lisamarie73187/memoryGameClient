@@ -161,13 +161,16 @@ input {
   border-radius: 10px;
 }
 
+.modalWrapper {
+  padding-top: 30px;
+}
 
 .modalText {
   font-size: 25px;
 }
 
-.modalName {
+.gameOver {
+  padding-top: 30px;
   font-size: 40px;
-  color: #a29df5;
 }
 

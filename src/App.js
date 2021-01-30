@@ -11,7 +11,7 @@ const screenStrings = {
     game: 'game'
 };
 
-const socket = io.connect("http://192.168.0.7:8180", {
+const socket = io.connect("http://localhost:8180", {
     withCredentials: true,
     extraHeaders: {
         "my-custom-header": "abcd"
@@ -24,7 +24,7 @@ function App() {
     const [screen, setScreen] = useState(screenStrings.signIn);
     const [userName, setUserName] = useState('')
 
-    const options = 26;
+    const options = 4;
 
     useEffect(() => {
         socket.on('users', (connectedUsers) => {

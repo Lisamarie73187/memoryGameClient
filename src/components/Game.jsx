@@ -1,6 +1,6 @@
 import React,{useState, useEffect, useMemo} from 'react'
 import Card from './Card'
-import WhoseTurnModal from './WhoseTurnModal'
+import Modal from './Modal'
 
 let indexes = 1;
 
@@ -8,37 +8,65 @@ function Game({options, socket, userList}) {
     const [game, setGame] = useState([]);
     const [flippedCount, setFlippedCount] = useState(0);
     const [flippedIndexes, setFlippedIndexes] = useState([]);
+    const [modals, setModals] = useState({nextPlayer: false, match: false, gameOver: false})
     const [showModal, setShowModal] = useState(false);
-    const [itsAMatch, setItsAMatch] = useState(false);
+
 
     const user = useMemo(() => {
-        const turnArr = userList.filter(e => e.turn === true)
+        const turnArr = userList.filter(e => e.turn === true);
         if(turnArr.length > 0){
             return turnArr[0]
         }
     },[userList]);
 
-    useEffect(() => {
+    const newGame = () => {
         socket.emit('newGame', options);
         socket.on('newGame', (shuffledGame) => {
             setGame(shuffledGame)
         });
         setShowModal(true)
-    }, []);
+        setModals({nextPlayer: true, match: false, gameOver: false})
+    }
 
     useEffect(() => {
-        if(flippedCount === 2 && userList.length > 1 ) {
-            if(!itsAMatch) {
-                let indexOfUser = indexes++;
-                if(indexOfUser >= userList.length - 1){
-                    indexes = 0
-                }
-                socket.emit('nextPlayer', indexOfUser);
-                setShowModal(true);
-            } else {
-                setShowModal(true);
-            }
+        newGame()
+    }, []);
+
+    const checkIfThereIsAWinner = () => {
+        let points = [];
+        for( let i = 0; i < userList.length; i++){
+            points.push(userList[i].points)
         }
+        const totalPoints = points.reduce((a, b) => a + b, 0);
+        return totalPoints === options;
+    };
+
+    const checkIfTheresAMatch = () => {
+        return game[flippedIndexes[0]].pictureId === game[flippedIndexes[1]].pictureId;
+    }
+
+    const getNextPlayer = () => {
+        let indexOfUser = indexes++;
+        if(indexOfUser >= userList.length - 1){
+            indexes = 0
+        }
+        socket.emit('nextPlayer', indexOfUser);
+    }
+
+
+    useEffect(() => {
+        if(flippedCount === 2 && userList.length > 1){
+            if(checkIfThereIsAWinner()){
+                setModals({nextPlayer: false, match: false, gameOver: true})
+            } else if (checkIfTheresAMatch()){
+                setModals({nextPlayer: false, match: true, gameOver: false})
+            } else {
+                getNextPlayer();
+                setModals({nextPlayer: true, match: false, gameOver: false})
+            }
+            setShowModal(true)
+        }
+
     },[flippedCount]);
 
 
@@ -56,8 +84,6 @@ function Game({options, socket, userList}) {
             const newIndexes = [...flippedIndexes];
             newIndexes.push(false);
             setFlippedIndexes(newIndexes);
-            setItsAMatch(true)
-
         } else {
             const newIndexes = [...flippedIndexes];
             newIndexes.push(true);
@@ -65,11 +91,25 @@ function Game({options, socket, userList}) {
         }
     }
 
-    const closeModal = () => {
-        setShowModal(false);
-        setItsAMatch(false);
-    };
+    useEffect(() => {
+        let users = [];
+        for(let i = 0; i < game.length; i++){
+            if(game[i].user?.name){
+                users.push(game[i].user.name)
+            }
+        }
+        const pointsArr = users.reduce(function (acc, curr) {
+            if (typeof acc[curr] == 'undefined') {
+                acc[curr] = 1;
+            } else {
+                acc[curr] += 1
+            }
+            return acc;
+        }, {});
 
+        socket.emit('addPoints', pointsArr);
+
+    },[game]);
 
     if (game.length === 0) return <div>loading...</div>;
     else {
@@ -107,29 +147,8 @@ function Game({options, socket, userList}) {
                     ))}
                 </div>
                 {showModal &&
-                <WhoseTurnModal userList={userList} closeModal={closeModal} color={user.color}>
-                    <div className="modalText">
-                        {!itsAMatch ? (
-                            <>
-                                It's
-                                <div style={{
-                                    fontSize: '50px',
-                                    color: `${user.color}`,
-                                    borderRadius: '10px'
-                                }}>
-                                    {user.name}
-                                </div>
-                                Turn
-                            </>
-                        ) : (
-                            <>
-                               It's a Match!
-                                Go Again!
-                            </>
-                        )}
-                    </div>
-                </WhoseTurnModal>
-                }
+                <Modal user={user} closeModal={() => setShowModal(false)} modals={modals} newGame={newGame}/>
+                    }
             </div>
         )
 }
