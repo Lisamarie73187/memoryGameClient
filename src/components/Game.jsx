@@ -4,7 +4,7 @@ import Modal from './Modal'
 
 let indexes = 1;
 
-function Game({options, socket, userList}) {
+function Game({options, socket, userList, setScreen}) {
     const [game, setGame] = useState([]);
     const [flippedCount, setFlippedCount] = useState(0);
     const [flippedIndexes, setFlippedIndexes] = useState([]);
@@ -20,16 +20,17 @@ function Game({options, socket, userList}) {
     },[userList]);
 
     const newGame = () => {
+        setScreen('signIn')
+        socket.emit('startNewGame')
+    };
+
+    useEffect(() => {
         socket.emit('newGame', options);
         socket.on('newGame', (shuffledGame) => {
             setGame(shuffledGame)
         });
-        setShowModal(true)
+        setShowModal(true);
         setModals({nextPlayer: true, match: false, gameOver: false})
-    }
-
-    useEffect(() => {
-        newGame()
     }, []);
 
     const checkIfThereIsAWinner = () => {

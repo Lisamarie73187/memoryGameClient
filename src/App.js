@@ -67,6 +67,7 @@ function App() {
                 options={options}
                 socket={socket}
                 userList={userList}
+                setScreen={setScreen}
             />
         }
     </div>
