@@ -11,7 +11,7 @@ const screenStrings = {
     game: 'game'
 };
 
-const socket = io.connect("http://localhost:8180", {
+const socket = io.connect("http://192.168.0.8:8180", {
     withCredentials: true,
     extraHeaders: {
         "my-custom-header": "abcd"
